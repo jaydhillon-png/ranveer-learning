@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ranveer's Learning Hub</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Nunito+Sans:wght@400;600&display=swap');
+
+  :root {
+    --bg: #f5f7ff;
+    --card: #ffffff;
+    --primary: #4f46e5;
+    --primary-light: #eef2ff;
+    --accent: #10b981;
+    --accent-light: #d1fae5;
+    --warn: #f59e0b;
+    --warn-light: #fef3c7;
+    --danger: #ef4444;
+    --danger-light: #fee2e2;
+    --text: #1e1b4b;
+    --muted: #6b7280;
+    --border: #e5e7eb;
+    --radius: 16px;
+    --shadow: 0 2px 12px rgba(79,70,229,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0 0 60px;
+  }
+
+  h1,h2,h3,h4 { font-family: 'Nunito', sans-serif; }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    background: var(--primary);
+    color: white;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(79,70,229,0.3);
+  }
+  .topbar-title { font-family:'Nunito',sans-serif; font-size:1.1rem; font-weight:800; }
+  .topbar-coins {
+    background: rgba(255,255,255,0.2);
+    border-radius: 30px;
+    padding: 5px 14px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ── SECTIONS ── */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* ── HOME ── */
+  .home-hero {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: white;
+    padding: 36px 20px 28px;
+    text-align: center;
+  }
+  .home-hero h1 { font-size: 1.7rem; margin-bottom: 6px; }
+  .home-hero p { opacity: 0.9; font-size: 0.95rem; }
+
+  .sessions-grid {
+    padding: 24px 16px;
+    display: grid;
+    gap: 14px;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .session-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.2s, transform 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .session-card:hover { border-color: var(--primary); transform: translateY(-2px); }
+  .session-card.locked { opacity: 0.5; cursor: default; }
+  .session-card.done { border-color: var(--accent); }
+
+  .session-icon {
+    width: 52px; height: 52px;
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+  .session-info h3 { font-size: 1rem; margin-bottom: 3px; }
+  .session-info p { font-size: 0.82rem; color: var(--muted); }
+  .session-badge {
+    margin-left: auto;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    flex-shrink: 0;
+  }
+  .badge-done { background: var(--accent-light); color: #065f46; }
+  .badge-go   { background: var(--primary-light); color: var(--primary); }
+  .badge-lock { background: var(--border); color: var(--muted); }
+
+  /* ── LEDGER ── */
+  .ledger-section {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 0 16px 16px;
+  }
+  .ledger-toggle {
+    width: 100%;
+    background: none;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--muted);
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: border-color 0.2s;
+  }
+  .ledger-toggle:hover { border-color: var(--primary); }
+  .ledger-body { display: none; margin-top: 10px; }
+  .ledger-body.open { display: block; }
+
+  .ledger-row {
+    background: var(--card);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.88rem;
+    box-shadow: var(--shadow);
+  }
+  .ledger-row span { flex: 1; }
+  .ledger-row .earned { font-weight: 700; color: var(--accent); }
+  .ledger-row .paid-btn {
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 5px 12px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+  }
+  .ledger-row .paid-btn.paid {
+    background: var(--border);
+    color: var(--muted);
+    cursor: default;
+  }
+  .ledger-empty { color: var(--muted); font-size: 0.88rem; padding: 12px 0; }
+
+  .reset-btn {
+    margin-top: 10px;
+    background: none;
+    border: 1.5px solid var(--danger);
+    color: var(--danger);
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  /* ── SUBJECT PICKER ── */
+  .picker-header {
+    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    color: white;
+    padding: 28px 20px 22px;
+    text-align: center;
+  }
+  .picker-header h2 { font-size: 1.4rem; margin-bottom: 4px; }
+  .picker-header p  { opacity: 0.85; font-size: 0.9rem; }
+
+  .subjects-grid {
+    padding: 20px 16px;
+    display: grid;
+    gap: 12px;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .subject-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 18px 20px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.2s, transform 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .subject-card:hover { border-color: var(--primary); transform: translateY(-2px); }
+  .subject-card.done { border-color: var(--accent); }
+  .subject-card.locked { opacity:0.5; cursor:default; }
+
+  .subject-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+  .subject-info h3 { font-size: 0.98rem; margin-bottom: 2px; }
+  .subject-info p  { font-size: 0.8rem; color: var(--muted); }
+  .subject-score {
+    margin-left: auto;
+    text-align: right;
+    font-size: 0.8rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .back-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 8px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* ── LESSON ── */
+  .lesson-header {
+    background: var(--primary);
+    color: white;
+    padding: 16px 20px;
+  }
+  .lesson-meta { font-size: 0.82rem; opacity: 0.8; margin-bottom: 2px; }
+  .lesson-title { font-size: 1.2rem; font-weight: 800; font-family: 'Nunito', sans-serif; }
+
+  .progress-bar-wrap {
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px;
+    height: 6px;
+    margin-top: 10px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    background: white;
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.4s;
+  }
+
+  .slide-wrap {
+    max-width: 640px;
+    margin: 20px auto;
+    padding: 0 16px;
+  }
+
+  .slide-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 16px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .slide-num {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .slide-card h2 {
+    font-size: 1.2rem;
+    color: var(--primary);
+    line-height: 1.3;
+  }
+  .slide-card p {
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: #374151;
+  }
+  .slide-card .example-box {
+    background: var(--primary-light);
+    border-left: 4px solid var(--primary);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 0.9rem;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .slide-card .remember-box {
+    background: var(--warn-light);
+    border-left: 4px solid var(--warn);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.6;
+  }
+  .slide-card .recap-box {
+    background: var(--accent-light);
+    border-left: 4px solid var(--accent);
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 0.9rem;
+    line-height: 1.7;
+  }
+
+  .slide-nav {
+    display: flex;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .btn {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 22px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: transform 0.15s, opacity 0.15s;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn:active { transform: translateY(0); opacity: 0.85; }
+  .btn-primary { background: var(--primary); color: white; flex:1; }
+  .btn-secondary { background: var(--border); color: var(--text); }
+  .btn-accent { background: var(--accent); color: white; flex:1; }
+
+  /* ── QUIZ ── */
+  .quiz-header {
+    background: var(--primary);
+    color: white;
+    padding: 16px 20px;
+  }
+  .quiz-wrap {
+    max-width: 640px;
+    margin: 20px auto;
+    padding: 0 16px;
+  }
+  .question-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 22px;
+  }
+  .q-label { font-size:0.78rem; font-weight:700; color:var(--primary); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:8px; }
+  .q-text  { font-size:1.05rem; font-weight:700; line-height:1.5; margin-bottom:18px; color:var(--text); }
+  .options { display:grid; gap:9px; }
+  .option-btn {
+    background: var(--bg);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 16px;
+    text-align: left;
+    font-family: 'Nunito Sans', sans-serif;
+    font-size: 0.92rem;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    color: var(--text);
+  }
+  .option-btn:hover:not(:disabled) { border-color: var(--primary); background: var(--primary-light); }
+  .option-btn.correct { border-color: var(--accent); background: var(--accent-light); color: #065f46; font-weight:700; }
+  .option-btn.wrong   { border-color: var(--danger); background: var(--danger-light); color: #991b1b; font-weight:700; }
+  .option-btn:disabled { cursor: default; }
+
+  .feedback-box {
+    margin-top: 14px;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    display: none;
+  }
+  .feedback-box.show { display: block; }
+  .feedback-box.correct { background: var(--accent-light); border:1.5px solid var(--accent); color:#065f46; }
+  .feedback-box.wrong   { background: var(--danger-light); border:1.5px solid var(--danger); color:#991b1b; }
+
+  .quiz-footer { margin-top: 14px; display:flex; gap:10px; }
+
+  /* ── RESULTS ── */
+  .results-wrap {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 24px 16px;
+    text-align: center;
+  }
+  .results-trophy { font-size: 4rem; margin-bottom: 12px; }
+  .results-score  { font-size: 2.2rem; font-weight: 800; color: var(--primary); margin-bottom: 6px; }
+  .results-earned { font-size: 1.1rem; font-weight: 700; color: var(--accent); margin-bottom: 16px; }
+  .results-msg {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <span class="topbar-title">📚 Ranveer's Learning Hub</span>
+  <span class="topbar-coins" id="topbarCoins">🪙 £0.00</span>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     HOME
+     ══════════════════════════════════════════════ -->
+<div id="home" class="section active">
+  <div class="home-hero">
+    <h1>Hello, Ranveer! 👋</h1>
+    <p>Pick a session below to start learning and earning coins.</p>
+  </div>
+
+  <div class="sessions-grid" id="sessionsGrid"></div>
+
+  <div class="ledger-section">
+    <button class="ledger-toggle" onclick="toggleLedger()">
+      <span>🗂 Parent Coin Ledger</span>
+      <span id="ledgerArrow">▼</span>
+    </button>
+    <div class="ledger-body" id="ledgerBody">
+      <div id="ledgerRows"></div>
+      <button class="reset-btn" onclick="confirmReset()">Reset all progress</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SESSION / SUBJECT PICKER
+     ══════════════════════════════════════════════ -->
+<div id="picker" class="section">
+  <div class="picker-header" id="pickerHeader">
+    <button class="back-btn" onclick="goHome()">← Back</button>
+    <h2 id="pickerTitle">Session</h2>
+    <p id="pickerSub">Choose a subject to start</p>
+  </div>
+  <div class="subjects-grid" id="subjectsGrid"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     LESSON
+     ══════════════════════════════════════════════ -->
+<div id="lesson" class="section">
+  <div class="lesson-header">
+    <button class="back-btn" onclick="backToPicker()">← Back</button>
+    <div class="lesson-meta" id="lessonMeta"></div>
+    <div class="lesson-title" id="lessonTitle"></div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="lessonProgress" style="width:0%"></div>
+    </div>
+  </div>
+  <div class="slide-wrap">
+    <div class="slide-card" id="slideCard"></div>
+    <div class="slide-nav">
+      <button class="btn btn-secondary" id="prevBtn" onclick="prevSlide()">← Back</button>
+      <button class="btn btn-primary" id="nextBtn" onclick="nextSlide()">Next →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     QUIZ
+     ══════════════════════════════════════════════ -->
+<div id="quiz" class="section">
+  <div class="quiz-header">
+    <button class="back-btn" onclick="backToPicker()">← Back</button>
+    <div class="lesson-meta" id="quizMeta"></div>
+    <div class="lesson-title" id="quizTitle">Quiz Time</div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="quizProgress" style="width:0%"></div>
+    </div>
+  </div>
+  <div class="quiz-wrap">
+    <div class="question-card">
+      <div class="q-label" id="qLabel"></div>
+      <div class="q-text"  id="qText"></div>
+      <div class="options" id="options"></div>
+      <div class="feedback-box" id="feedbackBox"></div>
+    </div>
+    <div class="quiz-footer">
+      <button class="btn btn-primary" id="quizNextBtn" style="display:none" onclick="nextQuestion()">Next question →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     RESULTS
+     ══════════════════════════════════════════════ -->
+<div id="results" class="section">
+  <div class="results-wrap">
+    <div class="results-trophy" id="resultsTrophy">🏆</div>
+    <div class="results-score" id="resultsScore"></div>
+    <div class="results-earned" id="resultsEarned"></div>
+    <div class="results-msg" id="resultsMsg"></div>
+    <button class="btn btn-accent" onclick="backToPicker()" style="margin-bottom:10px;width:100%">Try another subject →</button>
+    <button class="btn btn-secondary" onclick="goHome()" style="width:100%">Back to home</button>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   CURRICULUM DATA
+   ═══════════════════════════════════════════════════════════════ */
+const CURRICULUM = {
+  sessions: [
+    {
+      id: "s1",
+      title: "Session 1",
+      emoji: "🔢",
+      colour: "#4f46e5",
+      bgColour: "#eef2ff",
+      subjects: [
+        {
+          id: "s1_maths",
+          name: "Maths",
+          topic: "Fractions",
+          emoji: "➗",
+          colour: "#4f46e5",
+          bgColour: "#eef2ff",
+          slides: [
+            {
+              title: "What is a fraction?",
+              body: `<p>A fraction is a way of describing <strong>part of something</strong>.</p>
+<p>Imagine Ranveer has a chocolate bar with <strong>8 equal pieces</strong>. If he eats 3 of them, he has eaten <strong>3 out of 8</strong> pieces.</p>
+<div class="example-box">We write that as: <strong>3/8</strong><br>The bottom number (8) tells you how many equal parts there are in total.<br>The top number (3) tells you how many parts you're talking about.</div>
+<div class="remember-box">⭐ Bottom = total parts. Top = parts you have.</div>`,
+            },
+            {
+              title: "Numerator and Denominator",
+              body: `<p>The two numbers in a fraction have special names.</p>
+<div class="example-box"><strong>Numerator</strong> — the top number (the part you have)<br><strong>Denominator</strong> — the bottom number (the total parts)</div>
+<p>Example: Dalveer has <strong>1/4</strong> of a pizza. The denominator is 4 (pizza cut into 4 slices). The numerator is 1 (Dalveer has 1 slice).</p>
+<div class="remember-box">⭐ <em>Denominator</em> = <em>D</em>ivided into. <em>Numerator</em> = how many you've <em>N</em>abbed!</div>`,
+            },
+            {
+              title: "Equivalent Fractions",
+              body: `<p>Some fractions look different but mean exactly the same amount. These are called <strong>equivalent fractions</strong>.</p>
+<p>Think of it this way: if Ranveer cuts his sandwich into 2 pieces and eats 1, he's eaten <strong>1/2</strong>. If he'd cut it into 4 pieces and eaten 2, he'd still have eaten exactly the same amount — that's <strong>2/4</strong>.</p>
+<div class="example-box">1/2 = 2/4 = 4/8 — they are all the same!</div>
+<div class="remember-box">⭐ Multiply or divide BOTH numbers by the same amount to find an equivalent fraction.</div>`,
+            },
+            {
+              title: "Comparing Fractions",
+              body: `<p>When the <strong>denominators are the same</strong>, the bigger the numerator, the bigger the fraction.</p>
+<p>Ranveer gets 3/8 of the sweets. Dalveer gets 5/8. Who has more? The denominators are both 8, so compare the tops: 5 > 3. Dalveer has more.</p>
+<p>When the <strong>numerators are the same</strong>, the smaller the denominator, the bigger the fraction. (1/2 is bigger than 1/4 — think about it: half a pizza is more than a quarter of a pizza.)</p>
+<div class="remember-box">⭐ Same denominator: bigger top = bigger fraction. Same top: smaller bottom = bigger fraction.</div>`,
+            },
+            {
+              title: "Quick Recap",
+              body: `<div class="recap-box"><strong>✅ What you've learned today:</strong><br><br>
+1. A fraction describes part of a whole.<br>
+2. The <strong>numerator</strong> (top) = how many parts you have.<br>
+3. The <strong>denominator</strong> (bottom) = total equal parts.<br>
+4. <strong>Equivalent fractions</strong> look different but are the same size.<br>
+5. To compare fractions: same denominator → compare numerators; same numerator → compare denominators.<br><br>
+<strong>Now take the quiz to earn your coins!</strong> 🪙</div>`,
+            }
+          ],
+          quiz: [
+            { q:"In the fraction 3/5, what is the denominator?", options:["3","5","2","8"], correct:1, why:"The denominator is always the bottom number. Here, 5 is on the bottom — it tells us the whole is split into 5 equal parts." },
+            { q:"Ranveer has 4/8 of a cake and Dalveer has 1/2. Do they have the same amount?", options:["Yes — 4/8 = 1/2","No — 4/8 is bigger","No — 1/2 is bigger","Can't tell"], correct:0, why:"4/8 and 1/2 are equivalent fractions. If you divide the top and bottom of 4/8 by 4, you get 1/2. They are exactly the same amount." },
+            { q:"Which fraction is the biggest: 2/6, 4/6, or 1/6?", options:["1/6","2/6","4/6","They are all equal"], correct:2, why:"The denominators are all 6, so we just compare the top numbers. 4 is the biggest, so 4/6 is the biggest fraction." },
+            { q:"What is the numerator in 7/10?", options:["10","1","7","17"], correct:2, why:"The numerator is always the top number. Here it's 7 — it tells us we have 7 out of 10 parts." },
+            { q:"Ranveer cuts a pizza into 8 slices and eats 2. What fraction did he eat?", options:["8/2","2/8","6/8","2/6"], correct:1, why:"He ate 2 slices out of 8. The number he ate goes on top, the total goes on the bottom: 2/8." },
+            { q:"Which two fractions are equivalent?", options:["1/2 and 1/3","3/4 and 6/8","2/3 and 3/4","1/5 and 2/9"], correct:1, why:"Multiply 3/4 by 2/2 (which equals 1, so it doesn't change the value): 3×2=6 on top, 4×2=8 on the bottom = 6/8. So 3/4 and 6/8 are the same." },
+            { q:"1/3 is _____ than 1/5.", options:["smaller","the same size as","bigger","impossible to compare"], correct:2, why:"When numerators are the same, the smaller denominator means a bigger fraction. Imagine splitting a cake: thirds are bigger slices than fifths." },
+            { q:"Dalveer says '5/10 is the same as 1/2'. Is he right?", options:["Yes","No — 5/10 is bigger","No — 1/2 is bigger","Not enough information"], correct:0, why:"5/10 divided by 5 on top and bottom = 1/2. Dalveer is correct — well done Dalveer!" },
+            { q:"What fraction of a week is 3 days?", options:["3/5","3/6","3/7","3/4"], correct:2, why:"A week has 7 days. 3 days out of 7 = 3/7." },
+            { q:"Ranveer has 25p and spends 5p on sweets. What fraction of his money did he spend?", options:["5/25","1/5","Both 5/25 and 1/5 are correct","25/5"], correct:2, why:"He spent 5 out of 25p = 5/25. Simplify by dividing both by 5 = 1/5. Both are correct — they are equivalent fractions!" }
+          ]
+        },
+        {
+          id: "s1_science",
+          name: "Science",
+          topic: "Forces & Gravity",
+          emoji: "🌍",
+          colour: "#0891b2",
+          bgColour: "#e0f2fe",
+          slides: [
+            {
+              title: "What is a Force?",
+              body: `<p>A <strong>force</strong> is a push or a pull. Forces make things move, stop, speed up, slow down, or change shape.</p>
+<p>When Ranveer throws a ball, he is applying a <strong>push force</strong>. When he catches it, he is applying a <strong>pull force</strong> (stopping it).</p>
+<div class="example-box">Forces are measured in <strong>Newtons (N)</strong>, named after the scientist Isaac Newton.</div>
+<div class="remember-box">⭐ Force = a push or a pull. It always changes what an object is doing.</div>`,
+            },
+            {
+              title: "What is Gravity?",
+              body: `<p><strong>Gravity</strong> is a pulling force. Every object with mass pulls other objects towards it. The Earth is very massive, so it pulls everything towards its centre.</p>
+<p>That's why when Dalveer drops his toy, it always falls <em>down</em> — the Earth is pulling it.</p>
+<div class="example-box">The Moon has gravity too, but it is much weaker than Earth's. On the Moon, Ranveer would weigh about 6 times less than on Earth — but he'd still be the same person with the same mass!</div>
+<div class="remember-box">⭐ Gravity pulls objects toward the centre of the Earth. It's why things fall.</div>`,
+            },
+            {
+              title: "Weight vs Mass",
+              body: `<p>These two words sound similar but mean very different things.</p>
+<div class="example-box"><strong>Mass</strong> is how much <em>stuff</em> is in an object. It is measured in kilograms (kg) and stays the same wherever you are.<br><br><strong>Weight</strong> is the force of gravity pulling on that mass. It is measured in Newtons (N) and changes depending on where you are.</div>
+<p>If Ranveer has a mass of 35kg, his mass is always 35kg. But his weight on the Moon would be much less because the Moon's gravity is weaker.</p>
+<div class="remember-box">⭐ Mass = kg, stays the same. Weight = Newtons, changes with gravity.</div>`,
+            },
+            {
+              title: "Other Forces",
+              body: `<p>Gravity isn't the only force. Here are some important ones:</p>
+<div class="example-box"><strong>Friction</strong> — a force that slows things down when surfaces rub together. It's why Ranveer doesn't slide off his chair.<br><br><strong>Air resistance</strong> — friction from air. It's why a feather falls more slowly than a stone.<br><br><strong>Upthrust</strong> — a force from water that pushes upward. It's why boats float.</div>
+<div class="remember-box">⭐ Forces can work together or against each other. When forces are balanced, objects don't move.</div>`,
+            },
+            {
+              title: "Quick Recap",
+              body: `<div class="recap-box"><strong>✅ What you've learned today:</strong><br><br>
+1. A <strong>force</strong> is a push or a pull, measured in Newtons.<br>
+2. <strong>Gravity</strong> is a pulling force that attracts everything toward Earth's centre.<br>
+3. <strong>Mass</strong> (kg) never changes. <strong>Weight</strong> (N) depends on gravity.<br>
+4. Other forces: <strong>friction</strong> (slows things), <strong>air resistance</strong>, <strong>upthrust</strong>.<br>
+5. Balanced forces = no movement. Unbalanced forces = movement.<br><br>
+<strong>Ready for the quiz? Earn your coins!</strong> 🪙</div>`,
+            }
+          ],
+          quiz: [
+            { q:"What is a force?", options:["A type of energy","A push or a pull","The weight of an object","A measurement in kilograms"], correct:1, why:"A force is always a push or a pull. It makes objects start moving, stop, speed up, slow down, or change shape." },
+            { q:"What unit are forces measured in?", options:["Kilograms","Metres","Newtons","Litres"], correct:2, why:"Forces are measured in Newtons (N), named after scientist Isaac Newton." },
+            { q:"Dalveer drops his pencil. Which force pulls it to the ground?", options:["Friction","Upthrust","Air resistance","Gravity"], correct:3, why:"Gravity is the pulling force from Earth that draws objects downward toward its centre." },
+            { q:"Ranveer has a mass of 35kg. What happens to his mass on the Moon?", options:["It doubles","It halves","It stays the same","It becomes zero"], correct:2, why:"Mass always stays the same wherever you are. It is the amount of stuff in an object and doesn't depend on gravity." },
+            { q:"What is weight measured in?", options:["Kilograms","Newtons","Grams","Metres"], correct:1, why:"Weight is a force — the pull of gravity on an object — so it is measured in Newtons, just like all forces." },
+            { q:"A feather falls more slowly than a stone. Which force explains this?", options:["Gravity","Upthrust","Air resistance","Friction"], correct:2, why:"Air resistance acts on both, but the feather has a larger surface area relative to its mass, so air resistance slows it much more." },
+            { q:"Why does a boat float on water?", options:["Gravity pulls it up","Upthrust pushes it up","Friction holds it up","Air resistance keeps it still"], correct:1, why:"Water pushes upward on objects with a force called upthrust. If the upthrust equals the boat's weight, the forces are balanced and it floats." },
+            { q:"Forces are balanced on Ranveer's bag sitting on a shelf. What does that mean?", options:["The bag is falling","The bag is floating","The bag is not moving","The bag is getting heavier"], correct:2, why:"When forces are balanced (equal in size but opposite in direction), the object stays still. Gravity pulls the bag down; the shelf pushes up with equal force." },
+            { q:"Which of these is an example of friction being useful?", options:["Sliding on ice","Shoes gripping the ground","A feather falling slowly","A boat floating"], correct:1, why:"Friction between your shoes and the ground stops you slipping. Without it, walking would be like walking on ice!" },
+            { q:"On the Moon, Ranveer's weight would be about 6 times less. Why?", options:["He would lose mass on the Moon","The Moon's gravity is weaker than Earth's","There is no air on the Moon","The Moon is colder"], correct:1, why:"The Moon is much smaller than Earth, so its gravitational pull is much weaker — about 1/6th of Earth's. Less gravity = less weight." }
+          ]
+        },
+        {
+          id: "s1_english",
+          name: "English",
+          topic: "Nouns, Verbs & Adjectives",
+          emoji: "📖",
+          colour: "#d97706",
+          bgColour: "#fef3c7",
+          slides: [
+            {
+              title: "What is a Noun?",
+              body: `<p>A <strong>noun</strong> is a naming word. It names a person, place, thing, or idea.</p>
+<div class="example-box"><strong>Person:</strong> Ranveer, Dalveer, teacher, friend<br><strong>Place:</strong> Berkshire, school, park, bedroom<br><strong>Thing:</strong> pencil, football, phone, sandwich<br><strong>Idea:</strong> happiness, bravery, justice</div>
+<p>There are two types: <strong>common nouns</strong> (general things, not capitalised — table, dog, city) and <strong>proper nouns</strong> (specific names, always capitalised — Ranveer, London, Monday).</p>
+<div class="remember-box">⭐ Noun = naming word. Proper nouns always start with a capital letter.</div>`,
+            },
+            {
+              title: "What is a Verb?",
+              body: `<p>A <strong>verb</strong> is a doing or being word. Every sentence needs a verb.</p>
+<div class="example-box"><strong>Doing verbs:</strong> run, jump, eat, think, laugh<br><strong>Being verbs:</strong> is, are, was, were, am<br><br>Ranveer <strong>runs</strong> to school. ← "runs" is the verb.<br>Dalveer <strong>is</strong> Ranveer's brother. ← "is" is the verb.</div>
+<p>Verbs can change depending on when something happens (tense): <em>runs</em> (now), <em>ran</em> (past), <em>will run</em> (future).</p>
+<div class="remember-box">⭐ Find the verb by asking: "What is happening in this sentence?"</div>`,
+            },
+            {
+              title: "What is an Adjective?",
+              body: `<p>An <strong>adjective</strong> describes a noun. It tells you more about what something is like.</p>
+<div class="example-box">The <strong>clever</strong> boy = the adjective "clever" describes "boy".<br>Ranveer has a <strong>fast</strong>, <strong>red</strong> bike. ← "fast" and "red" are both adjectives describing "bike".</div>
+<p>Adjectives can also be used to compare: <em>fast → faster → fastest</em>. Ranveer is fast, but Dalveer might be <em>faster</em>, and their dad could be the <em>fastest</em>!</p>
+<div class="remember-box">⭐ An adjective always describes a noun. Ask: "What kind?" or "How many?" to find one.</div>`,
+            },
+            {
+              title: "Spotting All Three Together",
+              body: `<p>Now let's see nouns, verbs, and adjectives working together in a sentence.</p>
+<div class="example-box"><em>"The <u>excited</u> <strong>Ranveer</strong> <u>kicked</u> the <u>muddy</u> <strong>football</strong>."</em><br><br>
+<strong>Nouns:</strong> Ranveer, football<br>
+<strong>Verbs:</strong> kicked<br>
+<strong>Adjectives:</strong> excited (describes Ranveer), muddy (describes football)</div>
+<p>A good trick: nouns are what the sentence is about, verbs show the action, adjectives add colour and detail.</p>
+<div class="remember-box">⭐ Every sentence has at least one noun and one verb. Adjectives are optional — but they make writing more interesting!</div>`,
+            },
+            {
+              title: "Quick Recap",
+              body: `<div class="recap-box"><strong>✅ What you've learned today:</strong><br><br>
+1. A <strong>noun</strong> is a naming word (person, place, thing, idea).<br>
+2. <strong>Proper nouns</strong> like Ranveer, Berkshire, and Monday always have a capital letter.<br>
+3. A <strong>verb</strong> is a doing or being word. Every sentence has one.<br>
+4. An <strong>adjective</strong> describes a noun — it tells us what it's like.<br>
+5. Together they build clear, interesting sentences!<br><br>
+<strong>Time for the quiz! 🪙</strong></div>`,
+            }
+          ],
+          quiz: [
+            { q:"Which word is a noun in this sentence: 'Ranveer loves football'?", options:["loves","Ranveer","both Ranveer and football","None"], correct:2, why:"'Ranveer' is a proper noun (a name) and 'football' is a common noun (a thing). Both are nouns." },
+            { q:"What kind of noun is 'Berkshire'?", options:["Common noun","Proper noun","Verb","Adjective"], correct:1, why:"Berkshire is a specific place name, so it is a proper noun. Proper nouns always start with a capital letter." },
+            { q:"Find the verb: 'Dalveer laughed at the funny joke.'", options:["Dalveer","funny","laughed","joke"], correct:2, why:"'Laughed' is the doing word — it tells us what Dalveer did. That's the verb." },
+            { q:"Which word is an adjective: 'Ranveer has a bright, red schoolbag.'?", options:["Ranveer","has","bright","schoolbag"], correct:2, why:"'Bright' describes the schoolbag (a noun), so it is an adjective. 'Red' is also an adjective here." },
+            { q:"'Monday' is a proper noun. Why?", options:["It is a doing word","It is a specific name that always starts with a capital letter","It describes something","It is a common object"], correct:1, why:"Monday is the specific name of a day of the week. All specific names (proper nouns) start with a capital letter." },
+            { q:"Which sentence uses a verb correctly?", options:["The happy Ranveer.","Dalveer quickly.","Ranveer ran to school.","A fast, bright boy."], correct:2, why:"'Ran' is the verb — it tells us what Ranveer did. The other options have no verbs, so they aren't proper sentences." },
+            { q:"In the phrase 'a tiny spider', which word is the adjective?", options:["a","tiny","spider","None"], correct:1, why:"'Tiny' describes the spider (noun), so it is the adjective." },
+            { q:"Ranveer is writing about a football match. Which word adds the most detail: 'the goal' or 'the incredible goal'?", options:["the goal","the incredible goal","Both add the same detail","Neither"], correct:1, why:"'Incredible' is an adjective that describes the goal, making the sentence more vivid and interesting." },
+            { q:"Is 'happiness' a noun?", options:["No — it is an adjective","No — it is a verb","Yes — it is an idea noun","Yes — it is a proper noun"], correct:2, why:"Yes! Nouns can be ideas, not just objects. Happiness, bravery, and justice are all 'idea nouns' (sometimes called abstract nouns)." },
+            { q:"In 'Dalveer quickly ate the warm soup', what is the noun that the adjective 'warm' describes?", options:["Dalveer","quickly","ate","soup"], correct:3, why:"'Warm' is the adjective and it describes 'soup'. Soup is the noun being described." }
+          ]
+        }
+      ]
+    },
+    {
+      id: "s2",
+      title: "Session 2",
+      emoji: "🌌",
+      colour: "#7c3aed",
+      bgColour: "#f5f3ff",
+      subjects: [
+        {
+          id: "s2_maths",
+          name: "Maths",
+          topic: "Decimals & Money",
+          emoji: "💰",
+          colour: "#059669",
+          bgColour: "#d1fae5",
+          slides: [
+            {
+              title: "What is a Decimal?",
+              body: `<p>A <strong>decimal</strong> is a way of writing numbers that aren't whole — numbers between whole numbers.</p>
+<p>The <strong>decimal point</strong> (the dot) separates the whole number from the part that is less than 1.</p>
+<div class="example-box">3.5 means 3 whole ones and 5 tenths (half of 1)<br>0.25 means 0 whole ones and 25 hundredths (a quarter of 1)</div>
+<p>Ranveer earns 25p per correct quiz answer. 25p written as pounds is <strong>£0.25</strong> — that's 25 hundredths of a pound.</p>
+<div class="remember-box">⭐ Everything to the left of the dot = whole numbers. To the right = parts of one.</div>`,
+            },
+            {
+              title: "Tenths and Hundredths",
+              body: `<p>After the decimal point, each position has a name:</p>
+<div class="example-box">In the number <strong>4.73</strong>:<br>
+4 = ones (whole)<br>
+7 = tenths (7/10)<br>
+3 = hundredths (3/100)</div>
+<p>So 4.73 means: 4 whole ones, 7 tenths, and 3 hundredths.</p>
+<p>Think of it like money: £4.73 means 4 pounds, 7 ten-pence coins, and 3 one-pence coins.</p>
+<div class="remember-box">⭐ First decimal place = tenths. Second decimal place = hundredths.</div>`,
+            },
+            {
+              title: "Decimals and Money",
+              body: `<p>Money is one of the best ways to understand decimals because you already know how it works!</p>
+<div class="example-box">£1.00 = 100 pence<br>£0.50 = 50p (half a pound)<br>£0.25 = 25p (a quarter of a pound)<br>£0.10 = 10p<br>£0.01 = 1p</div>
+<p>If Ranveer gets 7 questions right in one quiz, he earns 7 × £0.25 = <strong>£1.75</strong>.</p>
+<p>If Dalveer gets 4 right, he earns 4 × £0.25 = <strong>£1.00</strong>.</p>
+<div class="remember-box">⭐ Money always has 2 decimal places. £1.5 is written as £1.50.</div>`,
+            },
+            {
+              title: "Ordering Decimals",
+              body: `<p>To compare decimals, always look at the digits <strong>from left to right</strong>.</p>
+<div class="example-box">Which is bigger: 0.6 or 0.45?<br><br>
+Look at the tenths column: 0.<strong>6</strong> vs 0.<strong>4</strong><br>
+6 tenths > 4 tenths, so <strong>0.6 is bigger</strong> than 0.45.<br><br>
+(A common mistake is to think 0.45 is bigger because 45 > 6 — but 45 hundredths is not the same as 45!)</div>
+<div class="remember-box">⭐ Compare decimal places one at a time, left to right. Don't be tricked by the number of digits.</div>`,
+            },
+            {
+              title: "Quick Recap",
+              body: `<div class="recap-box"><strong>✅ What you've learned today:</strong><br><br>
+1. A <strong>decimal</strong> shows numbers between whole numbers, using a dot.<br>
+2. First decimal place = <strong>tenths</strong>. Second = <strong>hundredths</strong>.<br>
+3. Money is a real-life use of decimals: £0.25 = 25p.<br>
+4. To compare decimals, compare <strong>digit by digit from left to right</strong>.<br>
+5. Always write money with 2 decimal places: £1.50 not £1.5.<br><br>
+<strong>Time for the quiz! 🪙</strong></div>`,
+            }
+          ],
+          quiz: [
+            { q:"In the number 5.47, what does the 4 represent?", options:["4 ones","4 tenths","4 hundredths","4 thousandths"], correct:1, why:"The first digit after the decimal point is in the tenths position. So the 4 means 4 tenths, or 4/10." },
+            { q:"Ranveer gets 8 questions right. He earns 25p per question. How much does he earn?", options:["£1.00","£1.75","£2.00","£2.25"], correct:2, why:"8 × 25p = 200p = £2.00. Good effort from Ranveer!" },
+            { q:"Which is bigger: 0.7 or 0.35?", options:["0.35","0.7","They are equal","Can't tell"], correct:1, why:"Look at the tenths: 0.7 has 7 tenths, 0.35 has only 3 tenths. 7 > 3, so 0.7 is bigger." },
+            { q:"How do you write 50 pence as pounds?", options:["£50","£5.00","£0.50","£0.05"], correct:2, why:"£1 = 100p. 50p is half of £1 = £0.50. The 5 goes in the tenths column." },
+            { q:"What is 3.4 + 2.3?", options:["5.7","5.07","6.7","5.77"], correct:0, why:"3 + 2 = 5 for the whole number part. 4 tenths + 3 tenths = 7 tenths. So the answer is 5.7." },
+            { q:"Dalveer has £2.60. He spends £1.25. How much does he have left?", options:["£1.25","£1.35","£1.45","£1.15"], correct:1, why:"£2.60 − £1.25: 60p − 25p = 35p. £2 − £1 = £1. Total = £1.35." },
+            { q:"Which number is the smallest: 0.9, 0.09, 0.19?", options:["0.9","0.19","0.09","They are all the same"], correct:2, why:"0.09 has 0 tenths and 9 hundredths. 0.19 has 1 tenth. 0.9 has 9 tenths. Smallest is 0.09." },
+            { q:"Ranveer earns £1.75 on Monday and £2.00 on Wednesday. How much in total?", options:["£3.75","£3.25","£4.75","£3.50"], correct:0, why:"£1.75 + £2.00 = £3.75. Add the pounds first (1+2=3), then the pence (75+0=75)." },
+            { q:"How many pence are in £3.46?", options:["346p","34.6p","3.46p","300p"], correct:0, why:"£1 = 100p, so £3 = 300p. Add 46p: 300 + 46 = 346p." },
+            { q:"Which correctly shows the number 'seven and three hundredths'?", options:["7.3","7.03","73.0","0.73"], correct:1, why:"'Seven' is the whole number part: 7. 'Three hundredths' goes in the second decimal place: 0.03. Together: 7.03." }
+          ]
+        },
+        {
+          id: "s2_science",
+          name: "Science",
+          topic: "Earth & Space",
+          emoji: "🪐",
+          colour: "#7c3aed",
+          bgColour: "#f5f3ff",
+          slides: [
+            {
+              title: "Our Solar System",
+              body: `<p>The <strong>Solar System</strong> is our neighbourhood in space. It contains the <strong>Sun</strong> at the centre, and eight planets orbiting around it.</p>
+<div class="example-box">The eight planets in order from the Sun:<br>
+Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune<br><br>
+A helpful way to remember: <strong>My Very Educated Mother Just Served Us Nachos</strong></div>
+<p>Earth is the third planet from the Sun. It is the only planet we know has life on it.</p>
+<div class="remember-box">⭐ The Sun is a star — a giant ball of burning gas. The planets orbit around it due to gravity.</div>`,
+            },
+            {
+              title: "Day and Night",
+              body: `<p><strong>Day and night</strong> happen because the Earth spins on its axis — an imaginary line through its centre. This spinning is called <strong>rotation</strong>.</p>
+<p>The Earth takes <strong>24 hours</strong> to complete one full rotation. When your side of the Earth faces the Sun, it is daytime. When it faces away, it is night.</p>
+<div class="example-box">When it's bedtime for Ranveer in Berkshire, the Sun is shining on the other side of the world — maybe in Australia, where it's morning!</div>
+<div class="remember-box">⭐ Day/night = Earth rotating every 24 hours. The Sun doesn't move — we do!</div>`,
+            },
+            {
+              title: "Seasons and the Year",
+              body: `<p>The Earth also travels <strong>around</strong> the Sun. This is called <strong>revolution</strong> or <strong>orbit</strong>. One full orbit takes <strong>365 days</strong> — one year.</p>
+<p>The Earth is tilted slightly on its axis. This tilt — not the distance from the Sun — causes the <strong>seasons</strong>.</p>
+<div class="example-box">When the UK is tilted <strong>toward</strong> the Sun → summer → longer days, more warmth.<br>When the UK is tilted <strong>away</strong> → winter → shorter days, less warmth.</div>
+<div class="remember-box">⭐ Seasons are caused by Earth's TILT, not by how close Earth is to the Sun.</div>`,
+            },
+            {
+              title: "The Moon",
+              body: `<p>The <strong>Moon</strong> is Earth's only natural satellite. It orbits the Earth roughly every <strong>28 days</strong> (a lunar month).</p>
+<p>The Moon doesn't produce its own light — it reflects sunlight. As it orbits, we see different amounts of the lit side, which gives us the <strong>phases of the Moon</strong>: new moon, crescent, half moon, full moon.</p>
+<div class="example-box">Ranveer and Dalveer could look up at the full moon at night — and at that exact moment, people everywhere in the world would see the same moon, because it's so far away that the angle barely changes.</div>
+<div class="remember-box">⭐ Moon orbits Earth every 28 days. Moon phases = how much lit side we can see from Earth.</div>`,
+            },
+            {
+              title: "Quick Recap",
+              body: `<div class="recap-box"><strong>✅ What you've learned today:</strong><br><br>
+1. Our <strong>Solar System</strong> has the Sun at the centre with 8 planets orbiting it.<br>
+2. <strong>Day and night</strong> = Earth rotating on its axis every 24 hours.<br>
+3. One <strong>year</strong> = Earth orbiting the Sun in 365 days.<br>
+4. <strong>Seasons</strong> are caused by Earth's tilt, not its distance from the Sun.<br>
+5. The <strong>Moon</strong> orbits Earth every 28 days and reflects sunlight.<br><br>
+<strong>Quiz time — collect your coins! 🪙</strong></div>`,
+            }
+          ],
+          quiz: [
+            { q:"Which planet is closest to the Sun?", options:["Venus","Earth","Mars","Mercury"], correct:3, why:"Mercury is the first planet from the Sun — the closest one. It has no atmosphere, so temperatures swing wildly." },
+            { q:"How long does it take Earth to rotate once on its axis?", options:["1 year","28 days","24 hours","12 hours"], correct:2, why:"Earth rotates once every 24 hours, which gives us one day (daytime + night-time combined)." },
+            { q:"What causes day and night on Earth?", options:["The Sun moving around Earth","Earth rotating on its axis","The Moon blocking the Sun","Earth orbiting the Sun"], correct:1, why:"Earth spins on its axis. The side facing the Sun has day; the side facing away has night." },
+            { q:"How long does it take Earth to orbit the Sun?", options:["24 hours","28 days","365 days","100 years"], correct:2, why:"Earth takes 365 days (one year) to travel all the way around the Sun." },
+            { q:"Ranveer is in the UK in summer. Why is it warm?", options:["Earth is closer to the Sun","The UK is tilted toward the Sun","The days are shorter","The Moon is full"], correct:1, why:"Seasons are caused by Earth's tilt. In summer, the UK is tilted toward the Sun, so sunlight hits at a more direct angle and days are longer." },
+            { q:"How long does the Moon take to orbit Earth?", options:["24 hours","7 days","28 days","365 days"], correct:2, why:"The Moon orbits Earth roughly every 28 days — about one month. That's where the word 'month' comes from!" },
+            { q:"The Moon produces its own light. True or false?", options:["True","False"], correct:1, why:"False. The Moon has no light of its own. It reflects sunlight, which is why it appears bright in the night sky." },
+            { q:"How many planets are in our Solar System?", options:["7","8","9","10"], correct:1, why:"There are 8 planets: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, and Neptune. (Pluto was reclassified as a 'dwarf planet'.)" },
+            { q:"Dalveer looks up and sees a full moon. What is a full moon?", options:["The Moon at its closest to Earth","When we can see the fully lit side of the Moon","When the Moon produces the most light","When the Moon is between the Sun and Earth"], correct:1, why:"A full moon is when Earth is positioned so we can see the entire lit side of the Moon. It appears as a complete bright circle." },
+            { q:"Which is the correct order of the first four planets from the Sun?", options:["Earth, Venus, Mercury, Mars","Mercury, Venus, Earth, Mars","Mars, Earth, Venus, Mercury","Venus, Mercury, Mars, Earth"], correct:1, why:"My Very Educated Mother — Mercury, Venus, Earth, Mars. These are the four inner (rocky) planets of the Solar System." }
+          ]
+        },
+        {
+          id: "s2_english",
+          name: "English",
+          topic: "Punctuation",
+          emoji: "✍️",
+          colour: "#dc2626",
+          bgColour: "#fee2e2",
+          slides: [
+            {
+              title: "Why Punctuation Matters",
+              body: `<p>Punctuation is the set of marks we use to make writing clear. Without it, sentences run into each other and meaning gets lost.</p>
+<div class="example-box">Without punctuation: <em>lets eat ranveer said dalveer</em><br><br>
+With punctuation: <em>"Let's eat, Ranveer," said Dalveer.</em></div>
+<p>You can see how much clearer the second version is — we can even tell who is speaking, when to pause, and that it's a quote.</p>
+<div class="remember-box">⭐ Punctuation helps the reader hear your writing. It shows them when to pause, stop, or be surprised.</div>`,
+            },
+            {
+              title: "Full Stops, Question Marks & Exclamation Marks",
+              body: `<p>These three all appear at the <strong>end</strong> of a sentence.</p>
+<div class="example-box"><strong>Full stop (.)</strong> — ends a normal statement.<br>
+<em>Ranveer completed his quiz.</em><br><br>
+<strong>Question mark (?)</strong> — ends a question.<br>
+<em>Did Dalveer eat the last biscuit?</em><br><br>
+<strong>Exclamation mark (!)</strong> — shows strong feeling or surprise.<br>
+<em>Ranveer got 10 out of 10!</em></div>
+<div class="remember-box">⭐ Only use one end mark per sentence. Never use !! — one is enough.</div>`,
+            },
+            {
+              title: "Commas",
+              body: `<p>The <strong>comma (,)</strong> is one of the most useful punctuation marks. It has several jobs:</p>
+<div class="example-box"><strong>1. Lists:</strong> Ranveer packed a pencil, a ruler, a rubber, and his lunchbox.<br><br>
+<strong>2. Joining clauses:</strong> Ranveer wanted to play outside, but it was raining.<br><br>
+<strong>3. Extra information:</strong> My brother, who is called Dalveer, is younger than me.<br><br>
+<strong>4. Before speech:</strong> Ranveer said, "I'm ready for the quiz."</div>
+<div class="remember-box">⭐ A comma is a short pause, not a stop. If the sentence still makes sense without the commas, they are probably used for extra information.</div>`,
+            },
+            {
+              title: "Apostrophes",
+              body: `<p>The <strong>apostrophe (')</strong> has two jobs:</p>
+<div class="example-box"><strong>1. Possession</strong> — showing something belongs to someone:<br>
+<em>Ranveer's bag</em> = the bag belonging to Ranveer.<br>
+<em>Dalveer's book</em> = the book belonging to Dalveer.<br><br>
+<strong>2. Contraction</strong> — showing letters have been left out when two words are joined:<br>
+<em>do not → don't</em><br>
+<em>I am → I'm</em><br>
+<em>it is → it's</em></div>
+<div class="remember-box">⭐ Its (no apostrophe) = belonging to it. It's (apostrophe) = it is. This is one of the most common mistakes in English!</div>`,
+            },
+            {
+              title: "Quick Recap",
+              body: `<div class="recap-box"><strong>✅ What you've learned today:</strong><br><br>
+1. Punctuation makes writing clear and easy to read.<br>
+2. <strong>Full stop (.):</strong> ends a statement. <strong>?:</strong> ends a question. <strong>!:</strong> strong feeling.<br>
+3. <strong>Commas</strong> are used in lists, to join clauses, around extra info, and before speech.<br>
+4. <strong>Apostrophes</strong> show possession (Ranveer's) or contraction (don't, I'm).<br>
+5. <em>It's</em> = it is. <em>Its</em> = belonging to it.<br><br>
+<strong>Time for your final quiz of the session! 🪙</strong></div>`,
+            }
+          ],
+          quiz: [
+            { q:"Which punctuation mark ends a question?", options:["Full stop (.)","Comma (,)","Question mark (?)","Exclamation mark (!)"], correct:2, why:"A question mark (?) always ends a direct question. It signals to the reader that an answer is expected." },
+            { q:"Ranveer said ___ I got them all right ___. Which punctuation belongs in the gaps?", options:[": and .","\" and \"",", and !","( and )"], correct:1, why:"Speech marks (\") go around the words actually spoken. So: Ranveer said \"I got them all right.\"" },
+            { q:"Which sentence uses a comma correctly in a list?", options:["Ranveer packed, a pencil ruler and book.","Ranveer packed a pencil, a ruler and a book.","Ranveer, packed a pencil a ruler and a book.","Ranveer packed a pencil a ruler, and a book."], correct:1, why:"In a list, commas separate the items. 'A pencil, a ruler and a book' is correct — you don't need a comma before 'and' in a simple list." },
+            { q:"What does the apostrophe mean in 'Dalveer's pencil'?", options:["Dalveer has more than one pencil","The pencil belongs to Dalveer","Dalveer is a pencil","Letters have been left out"], correct:1, why:"When an apostrophe + s is added to a name, it shows ownership/possession. Dalveer's pencil = the pencil belonging to Dalveer." },
+            { q:"Which is correct: 'Its raining' or 'It's raining'?", options:["Its raining","It's raining","Both are correct","Neither is correct"], correct:1, why:"It's with an apostrophe = 'it is'. 'It is raining' — so we write 'it's raining'. 'Its' without an apostrophe means 'belonging to it'." },
+            { q:"'don't' is a contraction of which two words?", options:["done not","do not","does not","doing not"], correct:1, why:"'Don't' = 'do not'. The apostrophe shows the letter 'o' in 'not' has been removed when the words were joined." },
+            { q:"Which sentence uses an exclamation mark correctly?", options:["Ranveer went to school!","What time is it!","Ranveer scored the winning goal!","I wonder what Dalveer is doing!"], correct:2, why:"Exclamation marks show strong emotion or excitement. Scoring a winning goal is exciting! The other options are normal statements or questions." },
+            { q:"Where do the commas go in this sentence: 'My friend who sits next to me is called Aiden.'", options:["'My friend, who sits next to me, is called Aiden.'","'My, friend who sits next to me is called Aiden.'","'My friend who, sits next to me is called Aiden.'","No commas needed"], correct:0, why:"'Who sits next to me' is extra information about 'my friend'. Extra information in the middle of a sentence is surrounded by commas." },
+            { q:"Ranveer wrote: 'Ranveers book is on the shelf.' What is missing?", options:["A full stop after 'shelf'","An apostrophe: Ranveer's book","An exclamation mark","A question mark"], correct:1, why:"To show the book belongs to Ranveer, you need an apostrophe + s: Ranveer's. Without it, the sentence looks like 'Ranveers' is a made-up word." },
+            { q:"Which sentence is punctuated correctly?", options:["did dalveer eat the last biscuit","Did Dalveer eat the last biscuit?","Did Dalveer eat the last biscuit.","did Dalveer eat the last biscuit?"], correct:1, why:"A sentence starts with a capital letter and a question ends with a question mark. 'Did Dalveer eat the last biscuit?' has both correct." }
+          ]
+        }
+      ]
+    }
+  ]
+};
+
+/* ═══════════════════════════════════════════════════════════════
+   STATE & STORAGE
+   ═══════════════════════════════════════════════════════════════ */
+let state = {
+  sessions: {},   // { s1_maths: { done:true, score:8, paid:false, ts:1234 } }
+  totalPence: 0
+};
+
+function loadState(){
+  try {
+    const raw = localStorage.getItem("rlh_state_v2");
+    if(raw) state = JSON.parse(raw);
+  } catch(e){}
+  recalcTotal();
+}
+
+function saveState(){
+  recalcTotal();
+  localStorage.setItem("rlh_state_v2", JSON.stringify(state));
+}
+
+function recalcTotal(){
+  let t = 0;
+  for(const k in state.sessions){
+    const s = state.sessions[k];
+    if(s.done) t += s.score * 25;
+  }
+  state.totalPence = t;
+  document.getElementById("topbarCoins").textContent = `🪙 £${(t/100).toFixed(2)}`;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CURRENT CONTEXT
+   ═══════════════════════════════════════════════════════════════ */
+let curSession   = null;
+let curSubject   = null;
+let curSlide     = 0;
+let curQuestion  = 0;
+let quizAnswered = false;
+let quizScore    = 0;
+
+/* ═══════════════════════════════════════════════════════════════
+   HOME
+   ═══════════════════════════════════════════════════════════════ */
+function renderHome(){
+  const grid = document.getElementById("sessionsGrid");
+  grid.innerHTML = "";
+
+  CURRICULUM.sessions.forEach((sess, idx) => {
+    const allDone = sess.subjects.every(sub => state.sessions[sub.id]?.done);
+    const anyDone = sess.subjects.some(sub => state.sessions[sub.id]?.done);
+    const prevDone = idx === 0 || CURRICULUM.sessions[idx-1].subjects.every(sub => state.sessions[sub.id]?.done);
+
+    let badge = "";
+    let extraClass = "";
+    if(allDone){
+      badge = `<span class="session-badge badge-done">✅ Complete</span>`;
+      extraClass = "done";
+    } else if(!prevDone && idx > 0){
+      badge = `<span class="session-badge badge-lock">🔒 Locked</span>`;
+      extraClass = "locked";
+    } else {
+      badge = `<span class="session-badge badge-go">▶ Go</span>`;
+    }
+
+    const subTopics = sess.subjects.map(s=>s.topic).join(" · ");
+
+    const card = document.createElement("div");
+    card.className = `session-card ${extraClass}`;
+    card.innerHTML = `
+      <div class="session-icon" style="background:${sess.bgColour}">${sess.emoji}</div>
+      <div class="session-info">
+        <h3>${sess.title}</h3>
+        <p>${subTopics}</p>
+      </div>
+      ${badge}`;
+    if(!extraClass.includes("locked")){
+      card.onclick = () => openPicker(sess.id);
+    }
+    grid.appendChild(card);
+  });
+
+  renderLedger();
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LEDGER
+   ═══════════════════════════════════════════════════════════════ */
+function toggleLedger(){
+  const body = document.getElementById("ledgerBody");
+  const arrow = document.getElementById("ledgerArrow");
+  body.classList.toggle("open");
+  arrow.textContent = body.classList.contains("open") ? "▲" : "▼";
+}
+
+function renderLedger(){
+  const rows = document.getElementById("ledgerRows");
+  rows.innerHTML = "";
+  let any = false;
+
+  CURRICULUM.sessions.forEach(sess => {
+    sess.subjects.forEach(sub => {
+      const s = state.sessions[sub.id];
+      if(!s?.done) return;
+      any = true;
+      const earned = `£${(s.score * 25 / 100).toFixed(2)}`;
+      const paidBtn = s.paid
+        ? `<button class="paid-btn paid">Paid ✓</button>`
+        : `<button class="paid-btn" onclick="markPaid('${sub.id}')">Mark paid</button>`;
+
+      const date = s.ts ? new Date(s.ts).toLocaleDateString("en-GB",{day:"numeric",month:"short"}) : "";
+      rows.innerHTML += `<div class="ledger-row">
+        <span><strong>${sess.title}</strong> · ${sub.name}: ${sub.topic}</span>
+        <span class="earned">${s.score}/10 · ${earned}</span>
+        <span style="font-size:0.78rem;color:var(--muted)">${date}</span>
+        ${paidBtn}
+      </div>`;
+    });
+  });
+
+  if(!any) rows.innerHTML = `<p class="ledger-empty">No completed quizzes yet — get started!</p>`;
+
+  const total = state.totalPence;
+  const unpaid = Object.entries(state.sessions)
+    .filter(([,s])=>s.done && !s.paid)
+    .reduce((acc,[,s])=>acc+s.score*25,0);
+  if(any){
+    rows.innerHTML += `<div class="ledger-row" style="border-top:2px solid var(--border);margin-top:6px;padding-top:14px">
+      <span><strong>Total earned:</strong></span>
+      <span class="earned">£${(total/100).toFixed(2)}</span>
+      <span style="font-size:0.78rem;color:var(--muted)">Outstanding: £${(unpaid/100).toFixed(2)}</span>
+      <span></span>
+    </div>`;
+  }
+}
+
+function markPaid(subId){
+  if(state.sessions[subId]) state.sessions[subId].paid = true;
+  saveState();
+  renderLedger();
+}
+
+function confirmReset(){
+  if(confirm("Reset ALL progress for Ranveer? This cannot be undone.")){
+    state = { sessions:{}, totalPence:0 };
+    saveState();
+    renderHome();
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PICKER
+   ═══════════════════════════════════════════════════════════════ */
+function openPicker(sessId){
+  curSession = CURRICULUM.sessions.find(s=>s.id===sessId);
+  document.getElementById("pickerTitle").textContent = curSession.title;
+  document.getElementById("pickerSub").textContent = "Choose a subject to start";
+
+  const grid = document.getElementById("subjectsGrid");
+  grid.innerHTML = "";
+
+  curSession.subjects.forEach(sub => {
+    const s = state.sessions[sub.id];
+    const done = s?.done;
+    const score = done ? s.score : null;
+
+    const card = document.createElement("div");
+    card.className = `subject-card ${done?"done":""}`;
+    card.innerHTML = `
+      <div class="subject-icon" style="background:${sub.bgColour}">${sub.emoji}</div>
+      <div class="subject-info">
+        <h3>${sub.name}: ${sub.topic}</h3>
+        <p>${sub.slides.length} slides · 10-question quiz</p>
+      </div>
+      <div class="subject-score">
+        ${done ? `<span style="color:var(--accent)">✅ ${score}/10</span><br><span style="color:var(--muted);font-size:0.75rem">£${(score*25/100).toFixed(2)}</span>` : `<span style="color:var(--primary)">▶ Start</span>`}
+      </div>`;
+    card.onclick = () => startLesson(sub.id);
+    grid.appendChild(card);
+  });
+
+  showSection("picker");
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   LESSON
+   ═══════════════════════════════════════════════════════════════ */
+function startLesson(subId){
+  curSubject = null;
+  curSession.subjects.forEach(s=>{ if(s.id===subId) curSubject=s; });
+  if(!curSubject) return;
+
+  curSlide = 0;
+  document.getElementById("lessonMeta").textContent = `${curSession.title} · ${curSubject.name}`;
+  document.getElementById("lessonTitle").textContent = curSubject.topic;
+  renderSlide();
+  showSection("lesson");
+}
+
+function renderSlide(){
+  const slide = curSubject.slides[curSlide];
+  const total = curSubject.slides.length;
+  document.getElementById("lessonProgress").style.width = `${((curSlide+1)/total)*100}%`;
+
+  const card = document.getElementById("slideCard");
+  card.innerHTML = `<div class="slide-num">Slide ${curSlide+1} of ${total}</div>
+    <h2>${slide.title}</h2>
+    ${slide.body}`;
+
+  document.getElementById("prevBtn").style.display = curSlide===0 ? "none" : "";
+  document.getElementById("nextBtn").textContent = curSlide===total-1 ? "Take the quiz →" : "Next →";
+}
+
+function nextSlide(){
+  if(curSlide < curSubject.slides.length-1){
+    curSlide++;
+    renderSlide();
+    window.scrollTo({top:0,behavior:"smooth"});
+  } else {
+    startQuiz();
+  }
+}
+
+function prevSlide(){
+  if(curSlide > 0){ curSlide--; renderSlide(); window.scrollTo({top:0,behavior:"smooth"}); }
+}
+
+function backToPicker(){
+  openPicker(curSession.id);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   QUIZ
+   ═══════════════════════════════════════════════════════════════ */
+function startQuiz(){
+  curQuestion = 0;
+  quizScore   = 0;
+  document.getElementById("quizMeta").textContent  = `${curSession.title} · ${curSubject.name}`;
+  document.getElementById("quizTitle").textContent = `${curSubject.topic} — Quiz`;
+  renderQuestion();
+  showSection("quiz");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function renderQuestion(){
+  const q     = curSubject.quiz[curQuestion];
+  const total = curSubject.quiz.length;
+  document.getElementById("quizProgress").style.width = `${((curQuestion+1)/total)*100}%`;
+  document.getElementById("qLabel").textContent = `Question ${curQuestion+1} of ${total}`;
+  document.getElementById("qText").textContent  = q.q;
+  document.getElementById("feedbackBox").className = "feedback-box";
+  document.getElementById("feedbackBox").textContent = "";
+  document.getElementById("quizNextBtn").style.display = "none";
+
+  const opts = document.getElementById("options");
+  opts.innerHTML = "";
+  q.options.forEach((opt,i)=>{
+    const btn = document.createElement("button");
+    btn.className = "option-btn";
+    btn.textContent = opt;
+    btn.onclick = ()=>answerQuestion(i);
+    opts.appendChild(btn);
+  });
+  quizAnswered = false;
+}
+
+function answerQuestion(idx){
+  if(quizAnswered) return;
+  quizAnswered = true;
+  const q    = curSubject.quiz[curQuestion];
+  const btns = document.querySelectorAll(".option-btn");
+  btns.forEach(b=>b.disabled=true);
+
+  const correct = idx === q.correct;
+  if(correct) quizScore++;
+
+  btns[q.correct].classList.add("correct");
+  if(!correct) btns[idx].classList.add("wrong");
+
+  const fb = document.getElementById("feedbackBox");
+  fb.className = `feedback-box show ${correct?"correct":"wrong"}`;
+  fb.innerHTML = `<strong>${correct?"✅ Correct!":"❌ Not quite."}</strong> ${q.why}`;
+
+  document.getElementById("quizNextBtn").style.display = "block";
+  document.getElementById("quizNextBtn").textContent =
+    curQuestion < curSubject.quiz.length-1 ? "Next question →" : "See my results →";
+}
+
+function nextQuestion(){
+  curQuestion++;
+  if(curQuestion < curSubject.quiz.length){
+    renderQuestion();
+    window.scrollTo({top:0,behavior:"smooth"});
+  } else {
+    showResults();
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESULTS
+   ═══════════════════════════════════════════════════════════════ */
+function showResults(){
+  const earned = quizScore * 25;
+  const prev = state.sessions[curSubject.id];
+  const isNew = !prev?.done;
+  const improved = prev?.done && quizScore > prev.score;
+
+  state.sessions[curSubject.id] = {
+    done: true,
+    score: quizScore,
+    paid: prev?.paid || false,
+    ts: Date.now()
+  };
+  saveState();
+
+  let trophy = quizScore===10?"🏆":quizScore>=8?"⭐":quizScore>=5?"👍":"📚";
+  let msg = quizScore===10
+    ? "Perfect score — every single one correct! 🎉 That's a maximum coin haul."
+    : quizScore>=8
+    ? "Really strong score. 8 or more right — nicely done."
+    : quizScore>=5
+    ? "Solid effort. Worth having a look back over the slides for the ones that tripped you up."
+    : "That was a tricky one. Have another look at the slides when you're ready — they'll make more sense second time around.";
+
+  if(!isNew && improved) msg += ` And that's better than last time — great improvement!`;
+
+  document.getElementById("resultsTrophy").textContent = trophy;
+  document.getElementById("resultsScore").textContent = `${quizScore} / 10`;
+  document.getElementById("resultsEarned").textContent = `🪙 You earned £${(earned/100).toFixed(2)} in coins`;
+  document.getElementById("resultsMsg").textContent = msg;
+
+  showSection("results");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   NAVIGATION HELPER
+   ═══════════════════════════════════════════════════════════════ */
+function showSection(id){
+  ["home","picker","lesson","quiz","results"].forEach(s=>{
+    const el = document.getElementById(s);
+    el.style.display = s===id ? "block" : "none";
+    el.classList.toggle("active", s===id);
+  });
+}
+
+function goHome(){
+  showSection("home");
+  renderHome();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BOOT
+   ═══════════════════════════════════════════════════════════════ */
+loadState();
+showSection("home");
+renderHome();
+</script>
+</body>
+</html>
